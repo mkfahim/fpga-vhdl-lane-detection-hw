@@ -1,4 +1,4 @@
--- lane.vhd
+-- top_lane.vhd
 --
 -- top level
 --
