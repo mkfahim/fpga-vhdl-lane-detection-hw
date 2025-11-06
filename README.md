@@ -49,17 +49,46 @@ flowchart LR
 ---
 
 
-## VHDL Modules
+### Stimulus Generation from `/c-files`
 
-| Module                 | Functionality                  |
-|------------------------|--------------------------------|
-| `top_lane.vhd`         | Integrates all modules          |
-| `lane_sobel.vhd`       | Sobel edge detection           |
-| `lane_g_matrix.vhd`    | 3x3 convolution for gradient   |
-| `lane_linemem.vhd`     | Stores pixel lines for convolution   |
-| `lane_sync.vhd`        | Timing & sync signals    |
-| `lane_g_root_IP.vhd`   | ROM IP for square root         |
-| `sim_lane.vhd`         | Testbench for simulation       |
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/mkfahim/fpga-vhdl-lane-detection-hw.git
+   ```
+2. **Navigate to the C source directory**
+
+   ```bash
+   cd <path-to-cloned-repo>/c-files
+   ```
+> Replace `<path-to-cloned-repo>` with the path to the folder created when you cloned the repository.
+
+3. **Compile the main C testbench**
+
+   ```bash
+   gcc -o lane_testbench.exe lane_testbench.c
+   ```
+
+4. **Run the testbench on sample images**
+
+   ```bash
+   ./lane_testbench.exe ../test_images/street_A
+   ./lane_testbench.exe ../test_images/street_B
+   ./lane_testbench.exe ../test_images/street_C
+   ```
+5. **Observe the generated files**
+   For each input image, the testbench produces **three files**:
+
+   | Input Image         | Generated Files                                         | Description |
+   |--------------------|--------------------------------------------------------|-------------|
+   | `street_A.bmp`      | `street_A_edge_fixed.bmp`                              | Edge-detected output (fixed-point) |
+   |                     | `street_A_stimuli.txt`                                 | Simulation input file for VHDL testbench |
+   |                     | `street_A_expected.txt`                                | Reference output for verification |
+
+
+**Next steps**
+- Use the generated `.txt` files as **input memory** for your VHDL simulation (`sim_lane.vhd`)  
+- Optionally, use `sim2bmp.c` to convert VHDL simulation outputs back to `.bmp` images for visual verification
+
 
 ---
 
@@ -71,4 +100,5 @@ flowchart LR
 ---
 
 For suggestions or contributions, please open a discussion or pull request.
+
 
